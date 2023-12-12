@@ -1,6 +1,3 @@
-# GitHub repo:
-# https://github.com/dusadrian/uRos2023
-
 
 #-------------------------------------------------------------------------------
 # first, download the CRAN version with all dependencies
@@ -14,9 +11,9 @@ install.packages("DDIwR", repos = "dusadrian.r-universe.dev")
 library(DDIwR)
 
 # ESS is a cross national, multilingual study
-# The integrated data file for round 10 has 37611 cases and 618 variables
+# The integrated data file for round 10 has 2283 cases and 428 variables
 
-# this command takes a LOT of time, close to 100k lines XML file
+# this command may take a lot of time, close to 60k lines XML file
 convert(
   "~/uRos2023/ESS10.sav",
   to = "DDI",
@@ -25,13 +22,13 @@ convert(
 
 # It creates the file ESS10.xml, found on GitHub
 
-# Look at the variable prtvtdis, line 30842
+# Look at the variable edlvpfat, line 29334
 
 # or import the ESS dataset into R:
 ess <- convert("~/uRos2023/ESS10.sav")
 
-# value labels, in Icelandic
-labels(ess$prtvtdis)
+# value labels, in Austria
+labels(ess$edlvpfat)
 
 
 
@@ -93,28 +90,25 @@ convert(dfm, to = "~/uRos2023/dfm.xml", monolang = FALSE)
 
 attr(dfm$Gender_ro, "xmlang") <- "ro"
 
-convert(dfm, to = "~/uRos2023/dfm.xml", monolang = FALSE)
+convert(dfm, to = "~/uRos2023/dfm.xml", monolang = FALSE, embed = FALSE)
 # xml:lang attribute appears in multiple places, by default "en"
 
+#----
+        # For the ESS data
+        # set the language for the valid categories
+        attr(ess$edlvpfat, "xmlang") <- "de"
 
-
+        # or for each and every category (including the misisng values)
+        attr(ess$edlvpfat, "xmlang") <- c(rep("de", 18), rep("en", 5))
 #----
 
-# For the ESS data
-# set the language for the valid categories
-attr(ess$prtvtdis, "xmlang") <- "is"
-
-# or for each and every category (including the misisng values)
-attr(ess$prtvtdis, "xmlang") <- c(rep("is", 15), rep("en", 5))
-
-#----
 
 # package xml2
 codeBook <- getMetadata("~/uRos2023/dfm.xml")
 names(codeBook)
 
 # with ESS10 this WILL take a lot of time, we can ignore the data description
-codeBook <- getMetadata("~/uRos2023/dfm.xml", ignore = "dataDscr")
+codeBook <- getMetadata("~/uRos2023/ESS10.xml", ignore = "dataDscr")
 names(codeBook)
 
 showLineages("abstract")
@@ -123,8 +117,8 @@ showLineages("abstract")
 abstract <- makeElement(
   "abstract",
   content = paste(
-    "European Social Survey (ESS) is the most important academic",
-    "survey in Europe..."
+    "This dataset is a test one to demonstrate",
+    "DDIwR for official statistics..."
   ),
   attributes = c(xmlang = "en", source = "RODA")
 )
