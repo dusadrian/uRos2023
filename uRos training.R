@@ -107,9 +107,9 @@ convert(dfm, to = "~/uRos2023/dfm.xml", monolang = FALSE, embed = FALSE)
 codeBook <- getMetadata("~/uRos2023/dfm.xml")
 names(codeBook)
 
-# with ESS10 this WILL take a lot of time, we can ignore the data description
-codeBook <- getMetadata("~/uRos2023/ESS10.xml", ignore = "dataDscr")
-names(codeBook)
+    # with ESS10 this can take a lot of time, we can ignore the data description
+    # codeBook <- getMetadata("~/uRos2023/ESS10.xml", ignore = "dataDscr")
+    # names(codeBook)
 
 showLineages("abstract")
 # codeBook/stdyDscr/stdyInfo/abstract
@@ -150,7 +150,7 @@ updateCodebook("~/uRos2023/dfm.xml", with = codeBook)
 
 # embed the dataset
 addChildren(
-  makeNotes(dfm),
+  makeDataNotes(dfm),
   to = codeBook$fileDscr
 )
 
